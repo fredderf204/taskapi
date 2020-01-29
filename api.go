@@ -114,6 +114,13 @@ func getTaskbyID(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "id is not in a valid format"})
 		return
 	}
+	// grab session from connection pool
+	sessionCopy := Session.Copy()
+	defer sessionCopy.Close()
+
+	// connect to collection
+	Collection = sessionCopy.DB(database).C("tasks")
+
 	err := Collection.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		log.Print("Error finding record: ", err)
@@ -135,6 +142,13 @@ func createNewTask(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "description missing"})
 		return
 	}
+	// grab session from connection pool
+	sessionCopy := Session.Copy()
+	defer sessionCopy.Close()
+
+	// connect to collection
+	Collection = sessionCopy.DB(database).C("tasks")
+
 	err := Collection.Insert(&Task{
 		Completed:   false,
 		Description: c.PostForm("title"),
@@ -159,6 +173,13 @@ func updateTaskbyID(c *gin.Context) {
 	}
 	result := Task{}
 	var completed bool
+	// grab session from connection pool
+	sessionCopy := Session.Copy()
+	defer sessionCopy.Close()
+
+	// connect to collection
+	Collection = sessionCopy.DB(database).C("tasks")
+
 	err := Collection.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		log.Print("Error finding record: ", err)
@@ -198,6 +219,13 @@ func deleteTaskbyID(c *gin.Context) {
 		return
 	}
 	updateQuery := bson.M{"_id": bson.ObjectIdHex(id)}
+	// grab session from connection pool
+	sessionCopy := Session.Copy()
+	defer sessionCopy.Close()
+
+	// connect to collection
+	Collection = sessionCopy.DB(database).C("tasks")
+
 	err := Collection.Remove(updateQuery)
 	if err != nil {
 		log.Print("Error deleting record: ", err)
