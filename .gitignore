@@ -16,3 +16,6 @@
 
 # Vscode files
 .vscode/
+
+#K8s Deployment stuff
+deploy/
