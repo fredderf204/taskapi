@@ -151,9 +151,9 @@ func createNewTask(c *gin.Context) {
 
 	err := Collection.Insert(&Task{
 		Completed:   false,
-		Description: c.PostForm("title"),
+		Description: c.PostForm("description"),
 		Duedate:     c.PostForm("duedate"),
-		Title:       c.PostForm("description"),
+		Title:       c.PostForm("title"),
 	})
 	if err != nil {
 		log.Print("Error inserting record: ", err)
